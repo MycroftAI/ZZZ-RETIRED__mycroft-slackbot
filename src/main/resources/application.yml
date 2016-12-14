@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: slackbot
+    
+server:
+  port: 9119
+
+slack:
+  bot:
+    key: xoxb-100386797988-Kc1TXuxLpexjijgaUhySkjSN
+    channel: random
+    name: officebot
+
+logging:
+  level:
+    slacker: DEBUG
+    com.ullink.slack: INFO
+    
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: true
