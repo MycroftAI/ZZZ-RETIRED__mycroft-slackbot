@@ -2,18 +2,18 @@ package slackbot;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ullink.slack.simpleslackapi.SlackChannel;
 import com.ullink.slack.simpleslackapi.SlackPersona;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
@@ -24,7 +24,7 @@ public class MycroftListener implements SlackMessagePostedListener {
 
 	private final Logger log = LoggerFactory.getLogger(MycroftListener.class);
 
-	private final List<MycroftUtterances> utterances = new ArrayList<>();
+	private SlackChannel chan;
 
 	@Autowired
 	SlackService slackService;
@@ -35,10 +35,33 @@ public class MycroftListener implements SlackMessagePostedListener {
 
 	public MycroftListener() {
 		super();
+		connectWebSocket();
+	}
+
+	@PostConstruct
+	private void setBotName() {
+		bot = slackService.getBot();
+	}
+
+	@Override
+	public void onEvent(SlackMessagePosted event, SlackSession session) {
+		String message = event.getMessageContent();
+		if (message.contains(bot.getId())) {
+			// we need to remove the bot id, as it confuzzles mycroft
+			message.replace(bot.getId(), "");
+			// set the chan
+			chan = event.getChannel();
+			// now fire off to the mycroft socket
+			sendMycroftMessage(message);
+		}
+	}
+
+	private void connectWebSocket() {
 		URI uri;
 		try {
 			uri = new URI("ws://192.168.0.177:8000/events/ws");
 			wsconn = new WebSocketClient(uri) {
+
 				@Override
 				public void onOpen(ServerHandshake serverHandshake) {
 					System.out.println("Websocket Opened");
@@ -46,9 +69,13 @@ public class MycroftListener implements SlackMessagePostedListener {
 
 				@Override
 				public void onMessage(String s) {
-					// data = new MessageParser(s, new
-					// SafeCallback<MycroftUtterances>());
-					System.out.println("---------------------------------------------------->>>>>>  " + s);
+					JSONObject json = new JSONObject(s);
+					if (json.get("message_type").equals("speak")) {
+						// oooh mycroft has something to say...
+						JSONObject meta = json.getJSONObject("metadata");
+						String ut = meta.getString("utterance");
+						slackService.sendMessage(ut, chan);
+					}
 				}
 
 				@Override
@@ -68,23 +95,16 @@ public class MycroftListener implements SlackMessagePostedListener {
 		}
 	}
 
-	private void addData(MycroftUtterances mu) {
-		utterances.add(mu);
-	}
-
-	@PostConstruct
-	private void setBotName() {
-		bot = slackService.getBot();
-	}
-
-	@Override
-	public void onEvent(SlackMessagePosted event, SlackSession session) {
-		String message = event.getMessageContent();
-		System.out.println("Message Posted: " + event.getMessageContent());
-		if (message.contains(bot.getUserName())) {
-			String sender = event.getSender().getUserName();
-			// now fire off to the mycroft socket
-
+	public void sendMycroftMessage(String msg) {
+		// let's keep it simple eh?
+		final String json = "{\"message_type\":\"recognizer_loop:utterance\", \"context\": null, \"metadata\": {\"utterances\": [\""
+				+ msg + "\"]}}";
+		if (wsconn == null || wsconn.getConnection().isClosed()) {
+			// try and reconnect
+			connectWebSocket();
 		}
+		wsconn.send(json);
+
 	}
+
 }
