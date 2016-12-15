@@ -7,10 +7,9 @@ server:
 
 slack:
   bot:
-    key: xoxb-100386797988-Kc1TXuxLpexjijgaUhySkjSN
+    key: yourkey
     channel: random
-    name: officebot
-
+    name: mycroft
 logging:
   level:
     slacker: DEBUG
