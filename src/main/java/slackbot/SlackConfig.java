@@ -1,7 +1,6 @@
 package slackbot;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,13 +40,7 @@ public class SlackConfig {
 
 	@Bean
 	MycroftListener mycroftListener() {
-		try {
-			return new MycroftListener();
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return new MycroftListener();
 	}
 
 }
