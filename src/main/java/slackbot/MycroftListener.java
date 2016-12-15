@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -20,11 +21,15 @@ import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 
 @Component
+@Configuration
 public class MycroftListener implements SlackMessagePostedListener {
 
 	private final Logger log = LoggerFactory.getLogger(MycroftListener.class);
 
 	private SlackChannel chan;
+
+	@Autowired
+	MycroftProperties mycroftProps;
 
 	@Autowired
 	SlackService slackService;
