@@ -58,11 +58,13 @@ public class MycroftListener implements SlackMessagePostedListener {
 		String message = event.getMessageContent();
 		System.out.println(message);
 		if (message.contains(bot.getId()) && !event.getSender().isBot()) {
+
 			// we need to remove the bot id, as it confuzzles mycroft
 			message.replace(bot.getId(), "");
 			// set the chan
 			chan = event.getChannel();
 			// now fire off to the mycroft socket
+			System.out.println("socket send...");
 			sendMycroftMessage(message);
 		}
 	}
