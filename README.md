@@ -9,7 +9,7 @@
 * Add the URL in the form of 192.168.0.177 (for example) to the application.yml file as the mycrofturi
 * Go back to the root of the project (where the pom.xml file is) and compile the jar with:
     `mvn clean install package`
-* Execute the Jar (it is a fat jar with embedded Tomcat) with java -jar target/mycroft-slackbot-0.0.1-SNAPSHOT.jar
+* Execute the Jar (it is a fat jar with embedded Tomcat) with `java -jar target/mycroft-slackbot-0.0.1-SNAPSHOT.jar`
 * Maybe execute in a tmux/screen session, or else make it a service
 * Go to your slack channel and send an @ message to your new bot, asking it any of the Mycroft things. (Make sure you have paired your device as per the Mycroft-core instructions)
 
