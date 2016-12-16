@@ -56,7 +56,8 @@ public class MycroftListener implements SlackMessagePostedListener {
 	@Override
 	public void onEvent(SlackMessagePosted event, SlackSession session) {
 		String message = event.getMessageContent();
-		if (message.contains(bot.getId())) {
+		System.out.println(message);
+		if (message.contains(bot.getId()) && !event.getSender().isBot()) {
 			// we need to remove the bot id, as it confuzzles mycroft
 			message.replace(bot.getId(), "");
 			// set the chan
