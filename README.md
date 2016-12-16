@@ -15,6 +15,9 @@
 
 ------
 
-### Docker Setup ###
+## Docker Setup ##
 
-* Coming soon...
+* Do steps 1, 2, 3, 4 above
+* Go to the root of the project and execute `mvn clean install package docker:build`
+* Run the docker image with `docker run -itd -p 9119:9119 mycroftai/slackbot`
+* Go to your slack channel and send an @ message to your new bot, asking it any of the Mycroft things. (Make sure you have paired your device as per the Mycroft-core instructions)
