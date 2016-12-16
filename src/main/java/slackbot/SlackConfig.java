@@ -40,7 +40,7 @@ public class SlackConfig {
 
 	@Bean
 	MycroftListener mycroftListener() {
-		return new MycroftListener();
+		return new MycroftListener(slackProperties.getMycrofturi());
 	}
 
 }

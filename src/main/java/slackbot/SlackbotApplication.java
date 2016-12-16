@@ -6,11 +6,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component;
 
 @SpringBootApplication
-@EnableConfigurationProperties
+@EnableConfigurationProperties(MycroftProperties.class)
 @Component
 public class SlackbotApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SlackbotApplication.class, args);
 	}
+
 }

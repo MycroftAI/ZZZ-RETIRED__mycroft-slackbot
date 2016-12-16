@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
 
 @Component
 @Configuration
+@EnableConfigurationProperties(MycroftProperties.class)
 public class MycroftListener implements SlackMessagePostedListener {
 
 	private final Logger log = LoggerFactory.getLogger(MycroftListener.class);
@@ -29,7 +31,9 @@ public class MycroftListener implements SlackMessagePostedListener {
 	private SlackChannel chan;
 
 	@Autowired
-	MycroftProperties mycroftProps;
+	private SlackProperties slackProperties;
+
+	private String mycroftUri;
 
 	@Autowired
 	SlackService slackService;
@@ -38,8 +42,9 @@ public class MycroftListener implements SlackMessagePostedListener {
 
 	private SlackPersona bot;
 
-	public MycroftListener() {
+	public MycroftListener(String uri) {
 		super();
+		mycroftUri = uri;
 		connectWebSocket();
 	}
 
@@ -62,9 +67,8 @@ public class MycroftListener implements SlackMessagePostedListener {
 	}
 
 	private void connectWebSocket() {
-		URI uri;
 		try {
-			uri = new URI("ws://192.168.0.177:8000/events/ws");
+			URI uri = new URI("ws://" + mycroftUri + ":8000/events/ws");
 			wsconn = new WebSocketClient(uri) {
 
 				@Override

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "mycroft")
 public class MycroftProperties {
+
 	public String uri;
 
 	public String getUri() {

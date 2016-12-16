@@ -10,6 +10,15 @@ public class SlackProperties {
 	public String channel;
 	public String key;
 	public String name;
+	public String mycrofturi;
+
+	public String getMycrofturi() {
+		return mycrofturi;
+	}
+
+	public void setMycrofturi(String mycrofturi) {
+		this.mycrofturi = mycrofturi;
+	}
 
 	public String getChannel() {
 		return channel;

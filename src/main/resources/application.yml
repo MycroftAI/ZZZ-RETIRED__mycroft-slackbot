@@ -8,12 +8,10 @@ server:
 slack:
   bot:
     key: yourkey
-    channel: paulsnotes
+    channel: random
     name: mycroft
+    mycrofturi: 192.168.0.177
     
-mycroft:
-  uri: ws://192.168.0.177:8000/events/ws
-  
 logging:
   level:
     slacker: DEBUG
