@@ -59,7 +59,7 @@ public class MycroftListener implements SlackMessagePostedListener {
 		if (message.contains(bot.getId()) && !event.getSender().isBot()) {
 
 			// we need to remove the bot id, as it confuzzles mycroft
-			message.replace(bot.getId(), "");
+			message = message.replace(bot.getId(), "");
 			// set the chan
 			chan = event.getChannel();
 			// now fire off to the mycroft socket
@@ -106,6 +106,7 @@ public class MycroftListener implements SlackMessagePostedListener {
 	}
 
 	public void sendMycroftMessage(String msg) {
+
 		// let's keep it simple eh?
 		final String json = "{\"message_type\":\"recognizer_loop:utterance\", \"context\": null, \"metadata\": {\"utterances\": [\""
 				+ msg + "\"]}}";
