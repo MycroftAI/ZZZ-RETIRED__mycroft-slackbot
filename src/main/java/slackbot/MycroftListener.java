@@ -70,7 +70,7 @@ public class MycroftListener implements SlackMessagePostedListener {
 
 	private void connectWebSocket() {
 		try {
-			URI uri = new URI("ws://" + mycroftUri + ":8000/events/ws");
+			URI uri = new URI("ws://" + mycroftUri + ":8181/core");
 			wsconn = new WebSocketClient(uri) {
 
 				@Override
@@ -108,9 +108,8 @@ public class MycroftListener implements SlackMessagePostedListener {
 
 	public void sendMycroftMessage(String msg) {
 
-		// let's keep it simple eh?
-		final String json = "{\"message_type\":\"recognizer_loop:utterance\", \"context\": null, \"metadata\": {\"utterances\": [\""
-				+ msg + "\"]}}";
+		// let's keep it simple eh?	
+		final String json = "{\"data\": {\"utterances\": [\"" + msg + "\"]}, \"type\": \"recognizer_loop:utterance\", \"context\": null}";
 		if (wsconn == null || wsconn.getConnection().isClosed()) {
 			// try and reconnect
 			connectWebSocket();
